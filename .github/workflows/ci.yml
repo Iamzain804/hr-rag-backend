@@ -1,0 +1,42 @@
+name: Backend CI / Microservices Test Suite
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Test Identity & Org Service
+        run: |
+          cd identity-org-service
+          uv run pytest
+
+      - name: Test Notification Service
+        run: |
+          cd notification-service
+          uv run pytest
+
+      - name: Test Ingestion Service
+        run: |
+          cd ingestion-service
+          uv run pytest
+
+      - name: Test RAG Chat Service
+        run: |
+          cd rag-chat-service
+          uv run pytest

@@ -1,0 +1,282 @@
+[
+  {
+    "id": "eval-01",
+    "category": "company_wide",
+    "question": "What is the standard health insurance reimbursement rate for prescription medications?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": true,
+    "expected_doc_scope": "company_wide",
+    "expected_keywords": ["90%", "reimbursement", "prescription medications"],
+    "unwanted_keywords": []
+  },
+  {
+    "id": "eval-02",
+    "category": "company_wide",
+    "question": "How much annual allowance is provided for dental restorative procedures?",
+    "user_context": {"branch_id": 2, "department_id": 2, "branch_name": "New York Branch", "department_name": "Marketing"},
+    "is_answerable": true,
+    "expected_doc_scope": "company_wide",
+    "expected_keywords": ["$1,500", "dental", "restorative"],
+    "unwanted_keywords": []
+  },
+  {
+    "id": "eval-03",
+    "category": "company_wide",
+    "question": "What is the biennial vision care allowance for prescription eyewear or contact lenses?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": true,
+    "expected_doc_scope": "company_wide",
+    "expected_keywords": ["$300", "biennial", "eyewear", "contact lenses"],
+    "unwanted_keywords": []
+  },
+  {
+    "id": "eval-04",
+    "category": "company_wide",
+    "question": "How many free confidential therapy sessions are employees entitled to per year?",
+    "user_context": {"branch_id": 3, "department_id": 3, "branch_name": "Singapore Branch", "department_name": "HR"},
+    "is_answerable": true,
+    "expected_doc_scope": "company_wide",
+    "expected_keywords": ["10", "therapy sessions", "Employee Assistance Program"],
+    "unwanted_keywords": []
+  },
+  {
+    "id": "eval-05",
+    "category": "company_wide",
+    "question": "What is the annual wellness stipend amount for gym memberships or meditation apps?",
+    "user_context": {"branch_id": 2, "department_id": 2, "branch_name": "New York Branch", "department_name": "Marketing"},
+    "is_answerable": true,
+    "expected_doc_scope": "company_wide",
+    "expected_keywords": ["$600", "wellness stipend"],
+    "unwanted_keywords": []
+  },
+  {
+    "id": "eval-06",
+    "category": "company_wide",
+    "question": "How many days of paid annual leave and sick leave do permanent employees receive?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": true,
+    "expected_doc_scope": "company_wide",
+    "expected_keywords": ["20 days", "annual", "10 days", "sick leave"],
+    "unwanted_keywords": []
+  },
+  {
+    "id": "eval-07",
+    "category": "company_wide",
+    "question": "What are the standard core working hours during the business day?",
+    "user_context": {"branch_id": 3, "department_id": 3, "branch_name": "Singapore Branch", "department_name": "HR"},
+    "is_answerable": true,
+    "expected_doc_scope": "company_wide",
+    "expected_keywords": ["10 AM", "4 PM", "core hours"],
+    "unwanted_keywords": []
+  },
+  {
+    "id": "eval-08",
+    "category": "branch_specific",
+    "question": "What is the home office equipment stipend for London software engineers and how often can it be claimed?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_1_dept_1",
+    "expected_keywords": ["£600", "2 years", "home office"],
+    "unwanted_keywords": ["MetroCard", "$150", "SGD"]
+  },
+  {
+    "id": "eval-09",
+    "category": "branch_specific",
+    "question": "Do London engineering employees receive public transit support or transit cards?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_1_dept_1",
+    "expected_keywords": ["Oyster card", "transit passes"],
+    "unwanted_keywords": ["MetroCard", "$150"]
+  },
+  {
+    "id": "eval-10",
+    "category": "branch_specific",
+    "question": "What is the standard weekly working hours expectation for London office staff?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_1_dept_1",
+    "expected_keywords": ["35-hour", "London"],
+    "unwanted_keywords": ["40-hour"]
+  },
+  {
+    "id": "eval-11",
+    "category": "branch_specific",
+    "question": "What monthly commuter transit allowance do New York Marketing team members receive?",
+    "user_context": {"branch_id": 2, "department_id": 2, "branch_name": "New York Branch", "department_name": "Marketing"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_2_dept_2",
+    "expected_keywords": ["$150", "MetroCard"],
+    "unwanted_keywords": ["Oyster", "£600"]
+  },
+  {
+    "id": "eval-12",
+    "category": "branch_specific",
+    "question": "What is the annual conference and industry event budget for New York Marketing staff?",
+    "user_context": {"branch_id": 2, "department_id": 2, "branch_name": "New York Branch", "department_name": "Marketing"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_2_dept_2",
+    "expected_keywords": ["$2,000", "conference", "industry"],
+    "unwanted_keywords": ["£600", "Oyster", "SGD"]
+  },
+  {
+    "id": "eval-13",
+    "category": "branch_specific",
+    "question": "What is the standard weekly hours expectation for New York branch employees?",
+    "user_context": {"branch_id": 2, "department_id": 2, "branch_name": "New York Branch", "department_name": "Marketing"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_2_dept_2",
+    "expected_keywords": ["40-hour", "New York"],
+    "unwanted_keywords": ["35-hour", "London"]
+  },
+  {
+    "id": "eval-14",
+    "category": "branch_specific",
+    "question": "How much learning and development credit do Singapore HR employees receive annually?",
+    "user_context": {"branch_id": 3, "department_id": 3, "branch_name": "Singapore Branch", "department_name": "HR"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_3_dept_3",
+    "expected_keywords": ["SGD $800", "learning", "development"],
+    "unwanted_keywords": ["£600", "$2,000", "MetroCard"]
+  },
+  {
+    "id": "eval-15",
+    "category": "branch_specific",
+    "question": "What is the monthly team lunch and social budget allocated for Singapore personnel?",
+    "user_context": {"branch_id": 3, "department_id": 3, "branch_name": "Singapore Branch", "department_name": "HR"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_3_dept_3",
+    "expected_keywords": ["SGD $50", "lunch", "Singapore"],
+    "unwanted_keywords": ["£600", "Oyster"]
+  },
+  {
+    "id": "eval-16",
+    "category": "unanswerable",
+    "question": "Can I claim reimbursements for personal skydiving lessons taken over the weekend?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": false,
+    "expected_doc_scope": null,
+    "expected_keywords": ["isn't covered in company documents", "flagged to HR"],
+    "unwanted_keywords": ["reimbursed", "approved", "skydiving allowance"]
+  },
+  {
+    "id": "eval-17",
+    "category": "unanswerable",
+    "question": "What is the pet insurance policy and annual stipend for adopting a dog?",
+    "user_context": {"branch_id": 2, "department_id": 2, "branch_name": "New York Branch", "department_name": "Marketing"},
+    "is_answerable": false,
+    "expected_doc_scope": null,
+    "expected_keywords": ["isn't covered in company documents", "flagged to HR"],
+    "unwanted_keywords": ["pet insurance", "dog adoption"]
+  },
+  {
+    "id": "eval-18",
+    "category": "unanswerable",
+    "question": "How many stock options and equity shares do junior software engineers get on day one?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": false,
+    "expected_doc_scope": null,
+    "expected_keywords": ["isn't covered in company documents", "flagged to HR"],
+    "unwanted_keywords": ["equity shares", "stock options granted"]
+  },
+  {
+    "id": "eval-19",
+    "category": "unanswerable",
+    "question": "Does the company provide leases or subsidies for electric sports cars or Ferraris?",
+    "user_context": {"branch_id": 2, "department_id": 2, "branch_name": "New York Branch", "department_name": "Marketing"},
+    "is_answerable": false,
+    "expected_doc_scope": null,
+    "expected_keywords": ["isn't covered in company documents", "flagged to HR"],
+    "unwanted_keywords": ["Ferrari", "sports car subsidy"]
+  },
+  {
+    "id": "eval-20",
+    "category": "unanswerable",
+    "question": "What is the HR policy regarding a 6-month unpaid sabbatical to climb Mount Everest?",
+    "user_context": {"branch_id": 3, "department_id": 3, "branch_name": "Singapore Branch", "department_name": "HR"},
+    "is_answerable": false,
+    "expected_doc_scope": null,
+    "expected_keywords": ["isn't covered in company documents", "flagged to HR"],
+    "unwanted_keywords": ["Everest", "sabbatical approved"]
+  },
+  {
+    "id": "eval-21",
+    "category": "unanswerable",
+    "question": "Is there a reimbursement budget for installing a luxury home sauna or hot tub?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": false,
+    "expected_doc_scope": null,
+    "expected_keywords": ["isn't covered in company documents", "flagged to HR"],
+    "unwanted_keywords": ["sauna", "hot tub allowance"]
+  },
+  {
+    "id": "eval-22",
+    "category": "cross_branch",
+    "question": "What transit or commuter allowance am I entitled to?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_1_dept_1",
+    "expected_keywords": ["Oyster card", "transit passes"],
+    "unwanted_keywords": ["$150", "MetroCard", "SGD"]
+  },
+  {
+    "id": "eval-23",
+    "category": "cross_branch",
+    "question": "What transit or commuter allowance am I entitled to?",
+    "user_context": {"branch_id": 2, "department_id": 2, "branch_name": "New York Branch", "department_name": "Marketing"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_2_dept_2",
+    "expected_keywords": ["$150", "MetroCard"],
+    "unwanted_keywords": ["Oyster card", "£600"]
+  },
+  {
+    "id": "eval-24",
+    "category": "cross_branch",
+    "question": "What is my professional conference and learning development budget?",
+    "user_context": {"branch_id": 2, "department_id": 2, "branch_name": "New York Branch", "department_name": "Marketing"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_2_dept_2",
+    "expected_keywords": ["$2,000", "conference"],
+    "unwanted_keywords": ["SGD $800", "£600"]
+  },
+  {
+    "id": "eval-25",
+    "category": "cross_branch",
+    "question": "What is my professional conference and learning development budget?",
+    "user_context": {"branch_id": 3, "department_id": 3, "branch_name": "Singapore Branch", "department_name": "HR"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_3_dept_3",
+    "expected_keywords": ["SGD $800", "learning"],
+    "unwanted_keywords": ["$2,000", "£600", "MetroCard"]
+  },
+  {
+    "id": "eval-26",
+    "category": "cross_branch",
+    "question": "What are my standard weekly working hours?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_1_dept_1",
+    "expected_keywords": ["35-hour"],
+    "unwanted_keywords": ["40-hour"]
+  },
+  {
+    "id": "eval-27",
+    "category": "cross_branch",
+    "question": "What are my standard weekly working hours?",
+    "user_context": {"branch_id": 2, "department_id": 2, "branch_name": "New York Branch", "department_name": "Marketing"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_2_dept_2",
+    "expected_keywords": ["40-hour"],
+    "unwanted_keywords": ["35-hour"]
+  },
+  {
+    "id": "eval-28",
+    "category": "cross_branch",
+    "question": "What home office or workspace equipment stipend is provided?",
+    "user_context": {"branch_id": 1, "department_id": 1, "branch_name": "London HQ", "department_name": "Engineering"},
+    "is_answerable": true,
+    "expected_doc_scope": "branch_1_dept_1",
+    "expected_keywords": ["£600", "home office"],
+    "unwanted_keywords": ["$150", "SGD"]
+  }
+]
