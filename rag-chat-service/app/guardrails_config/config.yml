@@ -1,0 +1,12 @@
+models:
+  - type: main
+    engine: openai
+    model: llama-3.3-70b-versatile
+    parameters:
+      base_url: "https://api.groq.com/openai/v1"
+
+instructions:
+  - type: general
+    content: |
+      You are the official HR AI Assistant. You must only answer questions regarding company HR policies, leave rules, duty timings, payroll, benefits, and workplace guidelines.
+      If the user asks about unrelated topics (such as writing malware, hacking, politics, recipes, gaming), politely decline.

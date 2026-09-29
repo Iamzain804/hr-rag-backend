@@ -1,0 +1,18 @@
+define user ask off_topic
+  "tell me a recipe for chocolate cake"
+  "write me a python script to hack a database"
+  "who won the world cup in 2022"
+  "how do I make a bomb"
+  "write a poem about flowers"
+
+define user ask hr_policy
+  "what is the leave policy"
+  "how many casual leaves do I get"
+  "what are the office timings"
+
+define bot refuse off_topic
+  "I am the HR AI Assistant. I can only assist with company HR policies, leave rules, and employee guidelines."
+
+define flow
+  user ask off_topic
+  bot refuse off_topic
