@@ -9,6 +9,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      GROQ_API_KEYS: "gsk_test_dummy_key_1,gsk_test_dummy_key_2"
+      SECRET_KEY: "ci_test_secret_key_for_jwt_verification_12345"
+      ALGORITHM: "HS256"
+      VECTOR_DB_TYPE: "faiss"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -19,7 +24,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Test Identity & Org Service
         run: |
