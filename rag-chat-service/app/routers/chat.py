@@ -20,6 +20,7 @@ from app.history_db import (
     update_conversation_title,
 )
 from app.ingestion_client import get_scope_ingestion_version, search_knowledge_base
+from app.language_detector import detect_language
 from app.ocr_service import process_attachment_file
 from app.rag_engine import execute_rag_pipeline, format_context_prompt
 from app.reranker import rerank_chunks
@@ -415,6 +416,7 @@ async def chat_endpoint(
     # 12. Stream SSE Response & Populate Semantic Cache if Eligible
     async def event_generator():
         # Emit initial metadata
+        detected_lang = detect_language(actual_message or "")
         yield {
             "event": "meta",
             "data": json.dumps(
@@ -425,6 +427,7 @@ async def chat_endpoint(
                     "department_id": user.department_id,
                     "chunks_found": len(retrieved_chunks),
                     "top_score": top_score,
+                    "language": detected_lang,
                     "has_attachment": bool(extracted_attachment),
                     "served_from_cache": False,
                     "trace_id": trace.trace_id,
@@ -446,6 +449,7 @@ async def chat_endpoint(
             user=user,
             retrieved_chunks=retrieved_chunks,
             attachment_text=extracted_attachment,
+            detected_language=detected_lang,
         ):
             if not ttft_recorded:
                 time_to_first_token_ms = round((time.time() - llm_start) * 1000, 2)

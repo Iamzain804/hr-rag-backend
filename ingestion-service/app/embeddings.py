@@ -18,17 +18,29 @@ def get_embedding_model() -> SentenceTransformer:
     return _model
 
 
-def generate_embedding(text: str) -> List[float]:
-    """Generate local 384-dimensional vector embedding for a single text chunk."""
+def _format_input(text: str, is_query: bool = False) -> str:
+    """Format input with appropriate prefix for E5 / asymmetric embedding models."""
+    model_name = settings.EMBEDDING_MODEL_NAME.lower()
+    if "e5" in model_name:
+        prefix = "query: " if is_query else "passage: "
+        if not text.startswith("query: ") and not text.startswith("passage: "):
+            return f"{prefix}{text}"
+    return text
+
+
+def generate_embedding(text: str, is_query: bool = False) -> List[float]:
+    """Generate local 768-dimensional vector embedding for text."""
     model = get_embedding_model()
-    embedding = model.encode(text, convert_to_numpy=True, normalize_embeddings=True)
+    formatted = _format_input(text, is_query=is_query)
+    embedding = model.encode(formatted, convert_to_numpy=True, normalize_embeddings=True)
     return embedding.tolist()
 
 
-def generate_embeddings_batch(texts: List[str]) -> List[List[float]]:
+def generate_embeddings_batch(texts: List[str], is_query: bool = False) -> List[List[float]]:
     """Generate local vector embeddings for a batch of text chunks."""
     if not texts:
         return []
     model = get_embedding_model()
-    embeddings = model.encode(texts, convert_to_numpy=True, normalize_embeddings=True, show_progress_bar=False)
+    formatted = [_format_input(t, is_query=is_query) for t in texts]
+    embeddings = model.encode(formatted, convert_to_numpy=True, normalize_embeddings=True, show_progress_bar=False)
     return embeddings.tolist()

@@ -18,8 +18,19 @@ def get_embedding_model() -> SentenceTransformer:
     return _model
 
 
-def generate_embedding(text: str) -> List[float]:
-    """Generate normalized 384-dimensional vector embedding for query/text."""
+def _format_input(text: str, is_query: bool = True) -> str:
+    """Format input with appropriate prefix for E5 / asymmetric embedding models."""
+    model_name = settings.EMBEDDING_MODEL_NAME.lower()
+    if "e5" in model_name:
+        prefix = "query: " if is_query else "passage: "
+        if not text.startswith("query: ") and not text.startswith("passage: "):
+            return f"{prefix}{text}"
+    return text
+
+
+def generate_embedding(text: str, is_query: bool = True) -> List[float]:
+    """Generate normalized 768-dimensional vector embedding for query/text."""
     model = get_embedding_model()
-    embedding = model.encode(text, convert_to_numpy=True, normalize_embeddings=True)
+    formatted = _format_input(text, is_query=is_query)
+    embedding = model.encode(formatted, convert_to_numpy=True, normalize_embeddings=True)
     return embedding.tolist()

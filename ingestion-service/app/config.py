@@ -1,12 +1,13 @@
+import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     PORT: int = 8003
-    EMBEDDING_MODEL_NAME: str = "sentence-transformers/all-MiniLM-L6-v2"
-    EMBEDDING_DIMENSION: int = 384
-    CHROMA_PERSIST_DIR: str = "./chroma_db"
-    COLLECTION_NAME: str = "hr_policy_documents"
+    EMBEDDING_MODEL_NAME: str = os.getenv("EMBEDDING_MODEL_NAME", "intfloat/multilingual-e5-base")
+    EMBEDDING_DIMENSION: int = 768
+    CHROMA_PERSIST_DIR: str = os.getenv("CHROMA_PERSIST_DIR", "./chroma_db")
+    COLLECTION_NAME: str = os.getenv("COLLECTION_NAME", "hr_policy_documents")
     CHUNK_SIZE: int = 500
     CHUNK_OVERLAP: int = 100
 

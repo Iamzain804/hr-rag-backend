@@ -3,6 +3,7 @@ import logging
 from typing import AsyncGenerator, List, Optional
 from app.config import settings
 from app.guardrails import check_groundedness_heuristic, validate_output_message
+from app.language_detector import detect_language, get_localized_fallback_message
 from app.llm_router import stream_llm_completion
 from app.schemas import RetrievedChunk, UserContext
 
@@ -41,23 +42,45 @@ def format_context_prompt(
     return "\n\n".join(sections)
 
 
-def build_system_prompt(user: UserContext) -> str:
+def build_system_prompt(user: UserContext, detected_language: Optional[str] = None) -> str:
     """
-    Build the grounded system prompt with caller role/branch context.
+    Build the grounded system prompt with caller role/branch context,
+    strict language matching, and structured output formatting instructions.
     """
     branch_desc = user.branch_name or f"Branch #{user.branch_id}" if user.branch_id else "Global / All Branches"
     dept_desc = user.department_name or f"Department #{user.department_id}" if user.department_id else "All Departments"
 
+    target_lang_str = f"Target Response Language for this query: {detected_language.upper()}." if detected_language else "Match incoming query language."
+    lang_instruction = (
+        f"LANGUAGE & SCRIPT MATCHING (CRITICAL - {target_lang_str}):\n"
+        "- If the user asks in Urdu native script (e.g. 'چھٹیاں کتنی ہیں'), you MUST respond ENTIRELY in native Urdu script (نستعلیق / اردو رسم الخط).\n"
+        "- If the user asks in Roman Urdu (e.g. 'leaves kitni hain', 'policy kya hai', 'duty timings batayein'), you MUST respond ENTIRELY in natural, fluent Roman Urdu.\n"
+        "- If the user asks in English, you MUST respond in English.\n"
+        "- NEVER switch languages silently. Always match the exact language and script used by the user.\n\n"
+    )
+
+    formatting_instruction = (
+        "STRUCTURED OUTPUT FORMATTING (PROFESSIONAL ASSISTANT STYLE):\n"
+        "- Bold Lead-in / Short Heading: Begin with a concise bold lead-in or short header indicating the policy or topic (e.g. **Annual Leave Policy:** or **سالانہ چھٹیوں کی تفصیلات:**).\n"
+        "- Bullet Points: Use clean markdown bullet points (`- `) for listing rules, conditions, or multi-step procedures.\n"
+        "- Markdown Tables: Whenever the answer contains multiple numbers, allocations, or comparative items (e.g., leave types and allocated days, salary bands, timings across shifts), present them in a clean Markdown table (`| Category | Details |`).\n"
+        "- Concise & Direct: For simple single-fact questions, provide a direct answer without unnecessary fluff or excessive headings.\n\n"
+    )
+
+    grounding_rules = (
+        "STRICT GROUNDING RULES:\n"
+        "1. You must answer questions STRICTLY and ONLY from the two provided context sections: [VERIFIED COMPANY DOCUMENT] and [EMPLOYEE-PROVIDED, UNVERIFIED].\n"
+        "2. Do NOT mention internal file names, document paths, or source citations (e.g. do NOT write [Source: ...] or 【Source: ...】). Keep your response clean, direct, and conversational.\n"
+        "3. If relying on [EMPLOYEE-PROVIDED, UNVERIFIED] context (uploaded screenshot / pasted text), explicitly state: 'Based on what you shared...' (or in Roman Urdu 'Aapke share kiye gaye document ke mutabiq...' / Urdu 'آپ کی شیئر کردہ تفصیلات کے مطابق...').\n"
+        "4. If neither section contains the answer, you must clearly state in the matching language that this is not covered in company documents. Do NOT invent or guess details.\n"
+    )
+
     return (
         f"You are the official HR AI Assistant for our company. You are assisting {user.full_name} "
         f"(Role: {user.role}, Branch: {branch_desc}, Department: {dept_desc}).\n\n"
-        "STRICT GROUNDING & ANSWERING RULES:\n"
-        "1. You must answer questions STRICTLY and ONLY from the two provided context sections: [VERIFIED COMPANY DOCUMENT] and [EMPLOYEE-PROVIDED, UNVERIFIED].\n"
-        "2. Do NOT mention internal file names, document paths, or source citations (e.g. do NOT write [Source: ...] or 【Source: ...】). Keep your response clean, direct, and conversational.\n"
-        "3. If you are relying on the [EMPLOYEE-PROVIDED, UNVERIFIED] section (such as an uploaded screenshot or pasted text), you MUST explicitly state: 'Based on what you shared...' or 'Based on the attached document...'.\n"
-        "4. If neither section contains the answer, you must clearly state: 'I don't have this information in company documents.' Do NOT assume, invent, or guess details.\n"
-        "5. Be concise, polite, professional, and clear.\n"
-        "6. Language Matching: If the employee asks in Roman Urdu (e.g. 'leaves kitni hain', 'policy kya hai') or Urdu or English, respond naturally and fluently in the SAME language/style (Roman Urdu if asked in Roman Urdu), while strictly preserving all facts, numbers, and policies from the context."
+        f"{lang_instruction}"
+        f"{formatting_instruction}"
+        f"{grounding_rules}"
     )
 
 
@@ -66,11 +89,15 @@ async def execute_rag_pipeline(
     user: UserContext,
     retrieved_chunks: List[RetrievedChunk],
     attachment_text: Optional[str] = None,
+    detected_language: Optional[str] = None,
 ) -> AsyncGenerator[str, None]:
     """
     Execute the RAG generation pipeline with confidence threshold check,
-    prompt assembly, LLM streaming, and groundedness heuristic validation.
+    prompt assembly, LLM streaming, localized fallback, and groundedness validation.
     """
+    if not detected_language:
+        detected_language = detect_language(user_message)
+
     # 1. Evaluate Retrieval / Rerank Confidence Threshold
     has_valid_attachment = bool(attachment_text and attachment_text.strip())
 
@@ -88,23 +115,22 @@ async def execute_rag_pipeline(
         logger.info(
             f"Top relevance score {top_score:.4f} (reranked={has_reranked}) is below threshold {effective_threshold:.4f}. LLM call skipped."
         )
-        # Stream fixed fallback message incrementally
-        fallback = settings.FALLBACK_MESSAGE
+        # Stream localized fallback message incrementally in the detected language
+        fallback = get_localized_fallback_message(detected_language)
         words = fallback.split(" ")
         for i, word in enumerate(words):
             yield word + (" " if i < len(words) - 1 else "")
             await asyncio.sleep(0.02)
         return
 
-
     # 2. Construct Augmented Prompt
     context_text = format_context_prompt(retrieved_chunks, attachment_text)
-    system_prompt = build_system_prompt(user)
+    system_prompt = build_system_prompt(user, detected_language=detected_language)
 
     user_prompt = (
         f"Context Information:\n{context_text}\n\n"
         f"Employee Question: {user_message}\n\n"
-        "Please provide an accurate, grounded answer based strictly on the above context."
+        f"Please provide an accurate, structured answer based strictly on the above context in the same language and script as the question."
     )
 
     messages = [

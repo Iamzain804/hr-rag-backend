@@ -317,7 +317,7 @@ def search_vector_store(
     3. Tagged to caller's department_id
     """
     collection = get_vector_collection()
-    query_embedding = generate_embedding(query)
+    query_embedding = generate_embedding(query, is_query=True)
     where_filter = _build_where_filter(branch_id, department_id)
 
     query_params: Dict[str, Any] = {

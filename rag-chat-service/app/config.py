@@ -26,8 +26,8 @@ class Settings(BaseSettings):
     SEMANTIC_CACHE_TTL_SECONDS: int = int(os.getenv("SEMANTIC_CACHE_TTL_SECONDS", "86400"))
     SEMANTIC_CACHE_DIR: str = os.getenv("SEMANTIC_CACHE_DIR", "./data/semantic_cache_db")
     SEMANTIC_CACHE_COLLECTION: str = os.getenv("SEMANTIC_CACHE_COLLECTION", "hr_semantic_cache")
-    EMBEDDING_MODEL_NAME: str = os.getenv("EMBEDDING_MODEL_NAME", "sentence-transformers/all-MiniLM-L6-v2")
-    EMBEDDING_DIMENSION: int = 384
+    EMBEDDING_MODEL_NAME: str = os.getenv("EMBEDDING_MODEL_NAME", "intfloat/multilingual-e5-base")
+    EMBEDDING_DIMENSION: int = 768
 
     # Reranker Settings (Part B)
     RERANKER_ENABLED: bool = os.getenv("RERANKER_ENABLED", "True").lower() in ("true", "1", "yes")
@@ -67,7 +67,10 @@ class Settings(BaseSettings):
     OCR_MAX_IMAGE_SIZE_MB: int = 10
 
     class Config:
-        env_file = ".env"
+        env_file = (
+            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"),
+            ".env"
+        )
         extra = "allow"
 
 
