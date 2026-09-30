@@ -14,25 +14,25 @@ SERVICES = [
         "name": "Identity & Org Service",
         "dir": os.path.join(BASE_DIR, "identity-org-service"),
         "port": 8001,
-        "cmd": ["uv", "run", "uvicorn", "app.main:app", "--port", "8001", "--reload"],
+        "cmd": [sys.executable, "-m", "uvicorn", "app.main:app", "--port", "8001", "--reload"],
     },
     {
         "name": "Notification Service",
         "dir": os.path.join(BASE_DIR, "notification-service"),
         "port": 8002,
-        "cmd": ["uv", "run", "uvicorn", "app.main:app", "--port", "8002", "--reload"],
+        "cmd": [sys.executable, "-m", "uvicorn", "app.main:app", "--port", "8002", "--reload"],
     },
     {
         "name": "Ingestion & Vector Service",
         "dir": os.path.join(BASE_DIR, "ingestion-service"),
         "port": 8003,
-        "cmd": ["uv", "run", "uvicorn", "app.main:app", "--port", "8003", "--reload"],
+        "cmd": [sys.executable, "-m", "uvicorn", "app.main:app", "--port", "8003", "--reload"],
     },
     {
         "name": "RAG Chat Service",
         "dir": os.path.join(BASE_DIR, "rag-chat-service"),
         "port": 8004,
-        "cmd": ["uv", "run", "uvicorn", "app.main:app", "--port", "8004", "--reload"],
+        "cmd": [sys.executable, "-m", "uvicorn", "app.main:app", "--port", "8004", "--reload"],
     },
 ]
 
